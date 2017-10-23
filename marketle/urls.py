@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from Anasayfa.views import *
+from django.contrib.auth import views as auth_views
+from Uyelik.views import uyelik_formu
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', anasayfa, name="anasayfa"),
+    url(r'^logout/$', logout_user, name="logout"),
+    url(r'login/$', auth_views.login, {'template_name': 'marketle/girisyap.html'}, name="login"),
+    url(r'^register/$', uyelik_formu, name="register")
 ]

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Üyelik{% endblock %}
+
+{% block bodyy %}
+    {% if user.is_authenticated %}
+        <p>Zaten üyesiniz..</p>
+        {% else %}
+        <div class="container">
+    <div class="row">
+        <h3 class="col-sm-offset-3 col-sm-6">Üye Formu</h3>
+    </div>
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-2">
+
+        </div>
+        <div class="col-sm-6">
+            <form action="{% url 'register' %}" method="POST" accept-charset="utf-8" class="form" role="form">
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        {{ form.first_name|attr:"class:form-control input-lg"|attr:"placeholder:Ad" }}
+{#                        <input type="text" name="firstname" value="" class="form-control input-lg" placeholder="Ad"/>#}
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        {{ form.last_name|attr:"class:form-control input-lg"|attr:"placeholder:Soyad" }}
+{#                        <input type="text" name="lastname" value="" class="form-control input-lg" placeholder="Soyad"/>#}
+                    </div>
+                </div>
+
+                {{ form.username|attr:"class:form-control input-lg"|attr:"placeholder:Username"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir kullanıcı adı giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
+
+                {{ form.email|attr:"class:form-control input-lg"|attr:"placeholder:Email"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir email adresi giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
+
+                {{ form.password1|attr:"class:form-control input-lg"|attr:"placeholder:Parola"|attr:"oninvalid:this.setCustomValidity('Lütfen parola alanını boş bırakmayınız')"|attr:"oninput:this.setCustomValidity('')" }}
+
+                {{ form.password2|attr:"class:form-control input-lg"|attr:"placeholder:Parola Tekrarı"|attr:"oninvalid:this.setCustomValidity('Lütfen parola tekrar alanını boş bırakmayınız')"|attr:"oninput:this.setCustomValidity('')" }}
+                {{ form.kullanici_tipi|attr:"class:form-control input-lg" }}
+
+                {{ form.adres|attr:"class:form-control input-lg"|attr:"placeholder:Adres" }}
+                {{ form.dogum_tarihi|attr:"class:form-control input-lg"|attr:"placeholder:gg/aa/YYYY" }}
+
+
+                    <br />
+                <span class="help-block">
+                    {% if form.errors %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                </span>
+                <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">ÜYE OL</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+    {% endif %}
+
+
+{% endblock %}
