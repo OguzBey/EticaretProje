@@ -4,8 +4,8 @@
 
 {% block bodyy %}
 {% if user.is_authenticated %}
-:DDD
+    Hoşgeldiniz <b>{{ user.username }}</b>
     {% else %}
-    xD
+    Henüz giriş yapmadınız.
 {% endif %}
 {% endblock %}

@@ -3,8 +3,10 @@ from django import forms
 from .models import MyUser
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.admin.widgets import AdminDateWidget
-import  datetime
+from django.core.files import File
+import os
+from marketle import settings
+from PIL import Image
 class UserForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Email Adresinizi giriniz..')
     MUSTERI = "MS"
@@ -30,8 +32,21 @@ class UserForm(UserCreationForm):
 
         user = super(UserForm, self).save(commit=True)
 
+
+        f = open(os.path.join(settings.BASE_DIR, 'static/image/avatars/user_avatar.png'), 'rb')
+        profil_fotosu = File(f)
+        profil_fotosu.name = '{}.png'.format(user.id)
+
+
+        # MyUser.profil_foto.save("{}.png".format(MyUser.user.id), f, save=True)
+
         user_profile = MyUser(user=user, kullanici_tipi=self.cleaned_data['kullanici_tipi'],
                                    adres=self.cleaned_data['adres'],
-                              dogum_tarihi=self.cleaned_data['dogum_tarihi'])
+                              dogum_tarihi=self.cleaned_data['dogum_tarihi'],
+                              profil_foto=profil_fotosu)
         user_profile.save()
+        # image = Image.open(user_profile.profil_foto.path)
+        # image.convert("RGB")
+        # image.resize((140,140), Image.ANTIALIAS)
+        # image.save(user_profile.profil_foto.name, quality=100)
         return user

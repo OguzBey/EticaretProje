@@ -12,7 +12,7 @@ def anasayfa(req):
         return render(req, 'marketle/anasayfa.html', context=context)
 
 
-@login_required(login_url='/')
+@login_required(login_url='/login/')
 def logout_user(req):
     logout(req)
     return HttpResponseRedirect(reverse('anasayfa'))
