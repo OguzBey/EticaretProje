@@ -24,13 +24,14 @@ def kullanici_profili_duzenle(req):
         user_edit_form2 = MyUserEditForm(data=req.POST, files=req.FILES)
         if user_edit_form.is_valid() and user_edit_form2.is_valid():
             user = user_edit_form.save()
-            # myuser = user_edit_form2.save(commit=False)
-            # myuser.user = user
-            # myuser.save()
             m = MyUser.objects.get(user=user)
+            if user_edit_form2.cleaned_data['profil_fotosu'] is None:
+                pass
+            else:
+                m.profil_foto = user_edit_form2.cleaned_data['profil_fotosu']
             m.adres = user_edit_form2.cleaned_data['adres']
             m.dogum_tarihi = user_edit_form2.cleaned_data['dogum_tarihi']
-            m.profil_foto = user_edit_form2.cleaned_data['profil_fotosu']
+            # m.profil_foto = user_edit_form2.cleaned_data['profil_fotosu']
             m.save()
             return HttpResponseRedirect(reverse('profil'))
 

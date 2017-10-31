@@ -21,18 +21,18 @@ from Uyelik.views import uyelik_formu
 from Profil.views import kullanici_profili, kullanici_profili_duzenle
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.staticfiles.views import serve
+from django.contrib.auth.forms import AuthenticationForm
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', anasayfa, name="anasayfa"),
     url(r'^logout/$', logout_user, name="logout"),
-    url(r'login/$', auth_views.login, {'template_name': 'marketle/girisyap.html'}, name="login"),
+    url(r'login/$', auth_views.login, {'template_name': 'marketle/girisyap.html'}, name="login",
+        ),
     url(r'^register/$', uyelik_formu, name="register"),
     url(r'^profil/$', kullanici_profili, name='profil'),
     url(r'^profil/edit$', kullanici_profili_duzenle, name='edit_profil'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 
