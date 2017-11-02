@@ -5,6 +5,8 @@
 {% block bodyy %}
 {% if user.is_authenticated %}
     Hoşgeldiniz <b>{{ user.username }}</b>
+    <br>
+    <b>{{ group_name }}</b>
     {% else %}
     Henüz giriş yapmadınız.
 {% endif %}

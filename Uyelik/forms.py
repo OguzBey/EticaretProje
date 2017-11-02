@@ -45,8 +45,5 @@ class UserForm(UserCreationForm):
                               dogum_tarihi=self.cleaned_data['dogum_tarihi'],
                               profil_foto=profil_fotosu)
         user_profile.save()
-        # image = Image.open(user_profile.profil_foto.path)
-        # image.convert("RGB")
-        # image.resize((140,140), Image.ANTIALIAS)
-        # image.save(user_profile.profil_foto.name, quality=100)
+
         return user

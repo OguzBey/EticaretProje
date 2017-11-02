@@ -1,14 +1,20 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, HttpResponseRedirect, reverse, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from Uyelik.models import MyUser
 from .forms import UserEditForm, MyUserEditForm
+from django.contrib.auth.models import User
 # Create your views here.
 
+
+@require_http_methods(["GET", "POST"])
 @login_required(login_url='/login/')
 def kullanici_profili(req):
     context = {}
     return render(req, 'marketle/profil.html', context=context)
 
+
+@require_http_methods(["GET", "POST"])
 @login_required(login_url='/login/')
 def kullanici_profili_duzenle(req):
     user_edit_form = UserEditForm(instance=req.user)
@@ -39,3 +45,57 @@ def kullanici_profili_duzenle(req):
                'form2': user_edit_form2,
                'myuser':myuser}
     return render(req, 'marketle/profil_duzenle.html', context=context)
+
+
+@require_http_methods(["GET", "POST"])
+def kullanici_goruntule(req, username):
+    if req.method == "GET":
+        uname = username.lstrip("@")
+        # user = get_object_or_404(User, username=uname)
+        try:
+            user = User.objects.get(username=uname)
+        except:
+            user = None
+
+        if user:
+            context = {'users':user,
+                       'check':True,
+                       'r_username':username}
+        else:
+            context = {'check':False}
+        return render(req, 'marketle/show_user.html', context=context)
+    else:
+        if req.user.is_superuser:
+
+            uname = username.lstrip("@")
+            do = req.POST['doit']
+
+            if do == "ban":
+
+                try:
+                    user = User.objects.get(username=uname)
+                except:
+                    #yanlış kullanıcı adı gönderildi
+                    return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
+
+                user.is_active = False
+                user.save()
+
+            elif do == "unban":
+
+                try:
+                    user = User.objects.get(username=uname)
+                except:
+                    #yanlış kullanıcı adı gönderildi
+                    return HttpResponseRedirect(reverse('show_user', kwargs={'username':username})) # hata sayfaya g
+
+                user.is_active = True
+                user.save()
+
+            #success
+            return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
+
+        else:
+            # İstek yapan kullanıcı admin değil csrf tahmin etmiş olabilir zor ama why not
+            return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
+

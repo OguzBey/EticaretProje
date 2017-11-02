@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block bodyy %}
+    <br>
+    {% if check %}
+        <div class="container-fluid well span6 col-md-offset-1 col-md-9">
+            <div class="row-fluid">
+                <div class="span2 pull-right">
+                    <img src="{{ users.myuser.profil_foto.thumbnail.url }}" class="img-rounded">
+                    <h3>@{{ users.username }}</h3>
+                    {% if users.is_superuser %}
+                    {% else %}
+                        {% if user.is_superuser %}
+                            {% if users.is_active %}
+                                <form action="{% url 'show_user' username=r_username %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="doit" type="hidden" value="ban">
+
+                                    <div class="btn-group">
+                                        <button class="btn btn-danger" type="submit">
+                                            Banla
+                                        </button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'show_user' username=r_username %}" method="POST">
+                                    {% csrf_token %}
+                                    <input name="doit" type="hidden" value="unban">
+
+                                    <div class="btn-group">
+                                        <button class="btn btn-success" type="submit">
+                                            Ban Kaldır
+                                        </button>
+                                    </div>
+                                </form>
+                            {% endif %}
+
+                        {% else %}
+                        {% endif %}
+                    {% endif %}
+                
+                </div>
+
+                <div class="span8 pull-left">
+
+                    <h5>Email: <b>{{ users.email }}</b></h5>
+                    <h5>Doğum Tarihi: <b>{% if users.myuser.dogum_tarihi == None %}-{% else %}
+                        {{ user.myuser.dogum_tarihi }}{% endif %}</b></h5>
+                    <h5>Kayıt Tarihi: <b>{{ users.date_joined }}</b>
+                        <small>{{ users.date_joined|timesince }} önce</small>
+                    </h5>
+                    <h5>Yorum Sayısı: <b>-</b></h5>
+                    {% if users.groups.all.first.name == "Satıcılar" %}
+                        <h5>Puan: <b>-</b></h5>
+                    {% else %}
+                    {% endif %}
+                    <h5>Kullanıcı: {% if users.is_active %}<b style="color: #4cae4c">Aktif</b>
+                    {% else %}<b style="color: #ac2925">Pasif</b>{% endif %}</h5>
+                </div>
+
+            </div>
+        </div>
+    {% else %}
+        Böyle bir kullanıcı yok
+    {% endif %}
+
+{% endblock %}
