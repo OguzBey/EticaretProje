@@ -6,7 +6,17 @@
 {% if user.is_authenticated %}
     Hoşgeldiniz <b>{{ user.username }}</b>
     <br>
-    <b>{{ group_name }}</b>
+{#    <b>{{ group_name }}</b>#}
+{#    <br>#}
+{#    <b>{{ diger.dogum_tarihi }}</b>#}
+{#    <br>#}
+
+{#    {{ urunler.urun_adi }}#}
+{#    {% for urun in urunler %}#}
+{##}
+{#        {{ urun.user.myuser.dogum_tarihi }}<br>#}
+{##}
+{#    {% endfor %}#}
     {% else %}
     Henüz giriş yapmadınız.
 {% endif %}
