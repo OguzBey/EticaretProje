@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-import time
+from stdimage.models import StdImageField
+from Profil.storage import OverwriteStorage
 # Create your models here.
 
 class Urun(models.Model):
@@ -8,6 +9,8 @@ class Urun(models.Model):
     urun_adi = models.CharField(max_length=30,
                                 blank=False,
                                 null=False)
+    urun_resmi = StdImageField(variations={'thumbnail': {'width': 140, 'height': 140}}, blank=True,
+                                null=True, storage=OverwriteStorage())
     urun_stok = models.IntegerField(blank=False,
                                     null=False,
                                     default=0)

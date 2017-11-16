@@ -44,10 +44,21 @@
 
                     <h5>Email: <b>{{ users.email }}</b></h5>
                     <h5>Doğum Tarihi: <b>{% if users.myuser.dogum_tarihi == None %}-{% else %}
-                        {{ user.myuser.dogum_tarihi }}{% endif %}</b></h5>
+                        {{ users.myuser.dogum_tarihi }}{% endif %}</b></h5>
                     <h5>Kayıt Tarihi: <b>{{ users.date_joined }}</b>
                         <small>{{ users.date_joined|timesince }} önce</small>
                     </h5>
+                    {% if not users.is_staff and not users.is_superuser %}
+                        <h5>Statü: {% if users.groups.all.first.name == "Satıcılar" %}
+                            <b style="color: #d58512">Satıcı</b>
+                        {% elif users.groups.all.first.name == "Müşteriler" %}
+                            <b style="color: #d58512">Müşteri</b>
+                        {% else %}
+                            <b style="color: #d58512">-</b>
+                        {% endif %}</h5>
+                    {% else %}
+                        <h5>Statü: <b style="color: #ffa235">Yönetici</b></h5>
+                    {% endif %}
                     <h5>Yorum Sayısı: <b>-</b></h5>
                     {% if users.groups.all.first.name == "Satıcılar" %}
                         <h5>Puan: <b>-</b></h5>

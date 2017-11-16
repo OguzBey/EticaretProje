@@ -27,7 +27,7 @@
                             </div>
                         </div>
 
-                        {{ form1.username|attr:"class:form-control input-lg"|attr:"placeholder:Username"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir kullanıcı adı giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
+                        {{ form1.username|attr:"class:form-control input-lg"|attr:"placeholder:Kullanıcı Adı"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir kullanıcı adı giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
 
                         {{ form1.email|attr:"class:form-control input-lg"|attr:"placeholder:Email"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir email adresi giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
                         {{ form2.adres|attr:"class:form-control input-lg"|attr:"placeholder:Adres" }}
@@ -43,9 +43,10 @@
 
 
                         <br/>
+
                         <span class="help-block">
-                    {% if form.errors %}
-                        {% for field in form %}
+                    {% if form1.errors %}
+                        {% for field in form1 %}
                             {% for error in field.errors %}
                                 <div class="alert alert-danger">
                                     <strong>{{ error|escape }}</strong>
@@ -53,7 +54,22 @@
                             {% endfor %}
                         {% endfor %}
 
-                        {% for error in form.non_field_errors %}
+                        {% for error in form1.non_field_errors %}
+                            <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                        {% if form2.errors %}
+                        {% for field in form2 %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% for error in form2.non_field_errors %}
                             <div class="alert alert-danger">
                             <strong>{{ error|escape }}</strong>
                             </div>

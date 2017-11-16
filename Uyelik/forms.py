@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.files import File
 import os
 from marketle import settings
-from PIL import Image
+
 class UserForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Email Adresinizi giriniz..')
     MUSTERI = "MS"

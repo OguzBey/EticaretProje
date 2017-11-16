@@ -21,7 +21,7 @@ from Uyelik.views import uyelik_formu
 from Profil.views import kullanici_profili, kullanici_profili_duzenle, kullanici_goruntule
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth.forms import AuthenticationForm
+from Urun.views import urunEkle
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -32,7 +32,8 @@ urlpatterns = [
     url(r'^register/$', uyelik_formu, name="register"),
     url(r'^profil/$', kullanici_profili, name='profil'),
     url(r'^profil/edit$', kullanici_profili_duzenle, name='edit_profil'),
-    url(r'^user/(?P<username>@\w+)$', kullanici_goruntule, name='show_user')
+    url(r'^user/(?P<username>@\w+)$', kullanici_goruntule, name='show_user'),
+    url(r'^product/add/$', urunEkle, name='add_product')
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

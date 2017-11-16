@@ -18,8 +18,11 @@ def anasayfa(req):
         # satici = req.user.satici
         # satici = User.objects.get(username=req.user.username)
         # urunler = Urun.objects.filter(user=satici)
-        # print(urunler.all()[0].user.myuser.dogum_tarihi)
+        # print(urunler.all()[0].urun_ktarihi)
         # diger = req.user.myuser
+
+        # req.user.myuser.dogum_tarihi # one to one
+        # req.user.satici.all()[0].urun_stok # many to one
 
         context = {}
 
