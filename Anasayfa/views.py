@@ -15,16 +15,11 @@ def anasayfa(req):
             group_name = req.user.groups.all().first().name
 
 
-        # satici = req.user.satici
-        # satici = User.objects.get(username=req.user.username)
-        # urunler = Urun.objects.filter(user=satici)
-        # print(urunler.all()[0].urun_ktarihi)
-        # diger = req.user.myuser
-
+        urunler = Urun.objects.all().order_by('urun_ktarihi').reverse() # Yeni ürünler başta
         # req.user.myuser.dogum_tarihi # one to one
         # req.user.satici.all()[0].urun_stok # many to one
 
-        context = {}
+        context = {'urunler': urunler}
 
         return render(req, 'marketle/anasayfa.html', context=context)
 

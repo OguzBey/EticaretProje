@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Marketle - Anasayfa{% endblock %}</title>
+    {% block css %}
+
+    {% endblock %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
     {% block javascript %}
-        <script src="{% static 'js/jquery.js' %}"></script>
-        <script src="{% static 'js/bootstrap.js' %}"></script>
+
     {% endblock %}
 </head>
 <body>

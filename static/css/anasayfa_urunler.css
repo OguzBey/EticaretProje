@@ -1,0 +1,37 @@
+.icerik {
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.baslik {
+    font-weight: bold;
+    color: #2e6da4;
+}
+
+.icerik-kategori {
+    font-weight: normal;
+    color: #b2b2b2;
+    margin-right: 4%;
+}
+
+.icerik-kategori-alt {
+    margin-top: 2%;
+    -ms-word-break: break-all;
+    word-break: break-all;
+
+    /* Non standard for webkit */
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+}
+
+hr {
+    border: 0;
+    clear: both;
+    display: block;
+    width: 96%;
+    background-color: #FFFF00;
+    height: 1px;
+}
