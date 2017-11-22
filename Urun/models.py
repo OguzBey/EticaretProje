@@ -22,7 +22,7 @@ class Urun(models.Model):
     urun_stok = models.IntegerField(blank=False,
                                     null=False,
                                     default=0)
-    urun_ktarihi = models.DateTimeField(auto_now=True,
+    urun_ktarihi = models.DateTimeField(auto_now_add=True,
                                         blank=False,
                                         null=False,
                                         editable=False)

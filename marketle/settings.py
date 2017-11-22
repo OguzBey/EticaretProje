@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 3. parti uygulamalar
     'widget_tweaks',
     'stdimage',
+    # kendi uygulamalarim
     'Uyelik',
     'Urun',
+    'SaticiOylama',
 ]
 
 MIDDLEWARE = [

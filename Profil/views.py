@@ -4,6 +4,8 @@ from django.views.decorators.http import require_http_methods
 from Uyelik.models import MyUser
 from .forms import UserEditForm, MyUserEditForm
 from django.contrib.auth.models import User
+from SaticiOylama.forms import SaticiOylamaForm
+from SaticiOylama.models import SaticiOylama
 # Create your views here.
 
 
@@ -17,6 +19,7 @@ def kullanici_profili(req):
 @require_http_methods(["GET", "POST"])
 @login_required(login_url='/login/')
 def kullanici_profili_duzenle(req):
+
     user_edit_form = UserEditForm(instance=req.user)
     # user_edit_formset = inlineformset_factory(User, MyUser,
     #                                        fields=('adres','dogum_tarihi','profil_foto'))
@@ -47,9 +50,32 @@ def kullanici_profili_duzenle(req):
     return render(req, 'marketle/profil_duzenle.html', context=context)
 
 
+def isVoted(satici_username, oyveren_username):
+    satici = User.objects.get(username=satici_username)
+    oyveren = User.objects.get(username=oyveren_username)
+    if satici.oylama.filter(oy_veren=oyveren).exists():
+        return True # Oy vermiş
+    else:
+        return False # Oy vermemiş
+
+def basariHesapla(user):
+
+    oy_sayisi = len(user.oylama.all())
+    if oy_sayisi == 0:
+        return 0
+    pay = 0
+    payda = oy_sayisi*10
+    for i in user.oylama.all():
+        pay += i.oy_puani
+    return "{:.2f}".format((pay/payda)*100)
+
+
+
+
 @require_http_methods(["GET", "POST"])
 def kullanici_goruntule(req, username):
     if req.method == "GET":
+        satici_oylama_form = SaticiOylamaForm()
         uname = username.lstrip("@")
         # user = get_object_or_404(User, username=uname)
         try:
@@ -58,17 +84,46 @@ def kullanici_goruntule(req, username):
             user = None
 
         if user:
-            context = {'users':user,
-                       'check':True,
-                       'r_username':username}
-        else:
+            if not user.is_superuser and user.groups.all().first().name == "Satıcılar": # Satıcı
+                yuzde_basari = basariHesapla(user)
+                if req.user.is_authenticated: # oturum açmış
+                    if isVoted(uname, req.user.username): # oy vermişse ?
+                        context = {'users': user,
+                                   'check': True,
+                                   'r_username': username,
+                                   'basari': yuzde_basari,
+                                   'oylama_formu_check': False,
+                                   'isVoted': True}
+                    else: # Oy vermemişse
+                        context = {'users':user,
+                                   'check':True,
+                                   'r_username':username,
+                                   'basari': yuzde_basari,
+                                   'oylama_formu_check': True,
+                                   'oylama_formu':satici_oylama_form,
+                                   'isVoted': False}
+                else: # oturum açmamış
+                    context = {'users': user,
+                               'check': True,
+                               'r_username': username,
+                               'basari': yuzde_basari,
+                               'oylama_formu_check': False,
+                               'isVoted': False}
+            else: # Satıcı ve admin değil
+                context = {'users': user,
+                           'check': True,
+                           'r_username': username,
+                           'oylama_form_check': False}
+
+        else: # Böyle bir kullanıcı yok
             context = {'check':False}
         return render(req, 'marketle/show_user.html', context=context)
-    else:
+    else: # POST
+        do = req.POST['doit']
+        uname = username.lstrip("@")
+        user = User.objects.get(username=uname)  # satici
+        oy_veren = User.objects.get(username=req.user.username)  # oy vermeye çalışan user
         if req.user.is_superuser:
-
-            uname = username.lstrip("@")
-            do = req.POST['doit']
 
             if do == "ban":
 
@@ -91,11 +146,33 @@ def kullanici_goruntule(req, username):
 
                 user.is_active = True
                 user.save()
+            elif do == "oyver": # Oylama by admin
 
-            #success
+                form = SaticiOylamaForm(data=req.POST)
+                if form.is_valid():
+                    if not SaticiOylama.objects.filter(oy_veren=oy_veren).exists():
+                        oy_puani = form.cleaned_data['oy_puani_f']
+                        SaticiOylama(user=user, oy_veren=oy_veren, oy_puani=oy_puani).save()
+                    else:
+                        pass
+
+            else:
+                pass
+
             return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
 
         else:
-            # İstek yapan kullanıcı admin değil csrf tahmin etmiş olabilir zor ama why not
+            # İstek yapan kullanıcı admin değil
+
+            if do == "oyver":
+                form = SaticiOylamaForm(data=req.POST)
+                if form.is_valid():
+                    if not SaticiOylama.objects.filter(oy_veren=oy_veren).exists():
+                        oy_puani = form.cleaned_data['oy_puani_f']
+                        SaticiOylama(user=user, oy_veren=oy_veren, oy_puani=oy_puani).save()
+                    else:
+                        pass
+            else:
+                pass
             return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
 

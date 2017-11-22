@@ -61,14 +61,35 @@
                     {% endif %}
                     <h5>Yorum Sayısı: <b>-</b></h5>
                     {% if users.groups.all.first.name == "Satıcılar" %}
-                        <h5>Puan: <b>-</b></h5>
+                        <h5>Başarı: <b>% {{ basari }}</b></h5>
                     {% else %}
                     {% endif %}
                     <h5>Kullanıcı: {% if users.is_active %}<b style="color: #4cae4c">Aktif</b>
                     {% else %}<b style="color: #ac2925">Pasif</b>{% endif %}</h5>
-                </div>
+                    <hr>
+                    {% if oylama_formu_check and not isVoted %}
+
+                        {% if user.username != users.username %}
+                            <form action="{% url 'show_user' username=r_username %}" method="POST"
+                                  accept-charset="utf-8"
+                                  class="form" role="form">
+                                {% csrf_token %}
+                                {{ oylama_formu.oy_puani_f }}
+                                <button type="submit" class="button btn-success">Oy Ver</button>
+                                <input name="doit" type="hidden" value="oyver">
+                            </form>
+                        {% else %}
+
+                        {% endif %}
+                        </div>
+                    {% else %}
+                        {% if isVoted %}
+                            <p> Zaten oy kullandınız.</p>
+                        {% endif %}
+                    {% endif %}
 
             </div>
+
         </div>
     {% else %}
         Böyle bir kullanıcı yok
