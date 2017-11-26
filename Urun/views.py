@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import HttpResponseRedirect, reverse, HttpResponse
+from django.shortcuts import HttpResponseRedirect, reverse, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from .forms import UrunEkleForm
@@ -75,7 +75,7 @@ def urunDuzenle(req, id):
                 return render(req, 'marketle/urun_duzenle.html', context=context)
             else:
                 # Böyle bir ürün yok
-                return HttpResponse("<h1>Üzgünüz.. Hatalı ya da eksik bir sayfaya geldiniz.</h1>")
+                return  render(req, "404.html", status=404)
         else:
             return HttpResponseRedirect(reverse('anasayfa'))  # İzinsiz erişim yönlendirmesi
     else: # POST
@@ -108,7 +108,7 @@ def urunSil(req, id):
     if req.user.groups.all().first().name == "Satıcılar":
         urun = Urun.objects.get(id=id)
         if not urun:
-            return HttpResponse("<h1>Üzgünüz.. Hatalı ya da eksik bir sayfaya geldiniz.</h1>")
+            return render(req, "404.html", status=404)
         if urun.user.username != req.user.username:
             return HttpResponseRedirect(reverse("anasayfa"))
         urun.delete()
@@ -119,6 +119,20 @@ def urunSil(req, id):
 
 
 
+
+    pass
+
+@require_http_methods(["GET"])
+def urunGoster(req, slug):
+
+    urun = Urun.objects.filter(urun_slug=slug)
+
+    if urun.exists():
+        urun = urun.first()
+        context = {"urun":urun}
+        return render(req, "marketle/urun_sayfasi.html", context=context)
+    else:
+        return render(req, "404.html", context={}, status=404)
 
     pass
 

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ urun.urun_slug }}{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/anasayfa_urunler.css' %}"/>
+{% endblock %}
+{% block bodyy %}
+    <div class="container-fluid well-sm">
+        <div class="row">
+            <div class="col-md-10">
+
+                <hr>
+                <div class="col-md-10">
+                    <div class="col-md-4">
+                        <img src="{{ urun.urun_resmi.thumbnail.url }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="icerik baslik">
+                            <h3>{{ urun.urun_adi|upper }}</h3>
+                        </div>
+                        <div class="icerik">
+                            <h4 style="color: #4cae4c">{{ urun.urun_fiyati }} TL</h4>
+                            <small style="font-weight: 75%; color: ">{{ urun.urun_ktarihi|timesince }} önce</small>
+                        </div>
+                        <div class="icerik">
+                            <div class="row">
+                                <div class="icerik-kategori col-md-1">
+                                    Stok:
+                                </div>
+                                <div class="pull-left"><b>{{ urun.urun_stok }}</b> adet var.</div>
+                            </div>
+                        </div>
+                        <div class="icerik">
+                            <div class="row">
+                                <div class="icerik-kategori col-md-1">
+                                    Satıcı:
+                                </div>
+                                <div class="pull-left"><a
+                                        href="{{ urun.show_user_url }}">{{ urun.user.username }}</a></div>
+                            </div>
+                        </div>
+
+                        <div class="icerik">
+
+                            <div class="icerik-kategori">
+                                <b>Açıklama</b>:
+                            </div>
+                            <div class="icerik-kategori-alt">
+                                {{ urun.urun_aciklama }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    {% if user.is_authenticated %}
+                        {% if not user.is_superuser and user.groups.all.first.name == "Satıcılar" and user.username == urun.user.username %}
+                            <a href="{% url 'edit_product' id=urun.id %}" class="btn btn-warning col-md-7"
+                               role="button">Düzenle</a>
+
+                            <a href="{% url 'delete_product' id=urun.id %}" class="btn btn-danger col-md-5"
+                               role="button">Sil</a>
+                        {% elif user.groups.all.first.name == "Müşteriler" %}
+                            <button>Sepete Ekle</button>
+                        {% else %}
+                            {#                                Satıcı ya da Müşteri değil kim bu user ?#}
+                        {% endif %}
+                    {% else %}
+                        <button>Üye OL</button>
+                    {% endif %}
+                </div>
+            <hr>
+
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

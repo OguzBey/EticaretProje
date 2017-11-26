@@ -25,7 +25,7 @@ SECRET_KEY = 'a3t(4$om^00c6cc3n0@&xx!&#nh!z5n)6!626-n%=*fdyj0maz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -132,7 +132,8 @@ LOGIN_REDIRECT_URL = 'anasayfa'
 
 STATIC_URL = '/static/'
 
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static/"),
 ]

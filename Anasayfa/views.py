@@ -1,9 +1,10 @@
-from django.shortcuts import render,HttpResponseRedirect,reverse
+from django.shortcuts import render,HttpResponseRedirect,reverse, render_to_response
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from Urun.models import Urun
 from django.contrib.auth.models import User
-
+from django.views import defaults
+from django.template import exceptions
 # Create your views here.
 
 def anasayfa(req):
@@ -29,7 +30,8 @@ def logout_user(req):
     logout(req)
     return HttpResponseRedirect(reverse('anasayfa'))
 
-# def login_user(req):
-#     form1 = LoginwCapthca()
-#     context = {'form':form1}
-#     return  render(req, 'marketle/girisyap.html', context=context)
+def sayfa_yok(req):
+
+    response = render(req, '404.html', {})
+    response.status_code = 404
+    return response

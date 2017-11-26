@@ -39,6 +39,10 @@ class Urun(models.Model):
         username = "@{}".format(self.user)
         return reverse('show_user', kwargs={'username':username})
 
+    def show_urun_url(self):
+        urun_url = "product/{}/".format(self.urun_slug)
+        return urun_url
+
     def __str__(self):
         return self.urun_adi
 

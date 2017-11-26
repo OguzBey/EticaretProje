@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketle - 404{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block headd %}
+    <style>
+    body{
+	background: url('{% static "image/bg.png" %}'); }
+
+    </style>
+{% endblock %}
+{% block bodyy %}
+    <div class="wrap">
+        <h1>Marketle</h1>
+        <div class="banner">
+            <img src="{% static 'image/banner.png' %}" alt=""/>
+        </div>
+        <div class="page">
+            <h2>Böyle bir sayfa bulunmamakta. </h2>
+        </div>
+        <div class="footer">
+            <p>Tüm Hakları Saklıdır.</p>
+        </div>
+    </div>
+{% endblock %}
