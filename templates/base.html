@@ -5,18 +5,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>{% block title %}Marketle - Anasayfa{% endblock %}</title>
-    {% block css %}
 
-    {% endblock %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
+    {% block css %}
+
+    {% endblock %}
     {% block javascript %}
 
     {% endblock %}
 
-{% block headd %}
-{% endblock %}
+    {% block headd %}
+    {% endblock %}
 </head>
 <body>
 

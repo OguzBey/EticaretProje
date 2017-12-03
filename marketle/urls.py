@@ -37,7 +37,8 @@ urlpatterns = [
     url(r'^product/add/$', urunEkle, name='add_product'),
     url(r'^product/edit/(?P<id>\d+)$', urunDuzenle , name='edit_product'),
     url(r'^product/delete/(?P<id>\d+)$', urunSil, name='delete_product'),
-    url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/$', urunGoster, name='show_product')
+    url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/$', urunGoster, name='show_product'),
+    url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/comment/(?P<id>\d+)$', yorumDuzenle, name="edit_comment")
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

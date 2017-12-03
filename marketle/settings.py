@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'Uyelik',
     'Urun',
     'SaticiOylama',
+    'Yorumlama'
 ]
 
 MIDDLEWARE = [

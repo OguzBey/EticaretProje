@@ -35,3 +35,73 @@ hr {
     background-color: #FFFF00;
     height: 1px;
 }
+
+.frm {
+    margin-bottom: 10px;
+}
+
+.yorumlar{
+
+    margin-bottom: 100px;
+}
+.yorum{
+
+    margin-bottom: 30px;
+}
+.yorum-baslik {
+    /*background: #caccc8;*/
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.5em;
+    /*margin-top: 0.5em;*/
+    /*background: yellow;*/
+    border-bottom: solid 1px gray;
+}
+
+.yorum-baslik-h {
+    color: #a1b0cc;
+    display: inline-flex;
+    font-size: 2em;
+    /*float: left;*/
+
+}
+.yorum-yapan-h{
+    display: inline-flex;
+    margin-right: 10px;
+    font-size: 1em;
+    font-style: italic;
+}
+
+.trh {
+    vertical-align: middle;
+    display: inline-flex;
+    font-size: 0.8em;
+    color: #4a4b49;
+}
+
+.yorum-icerik {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    border-bottom: solid 1px gray;
+
+    /*background: yellow;*/
+    -ms-word-break: break-all;
+    word-break: break-all;
+
+    /* Non standard for webkit */
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+
+}
+
+.yorum-icerik-p {
+    font-size: 0.9em;
+}
+

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 {% block title %}{{ urun.urun_slug }}{% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/anasayfa_urunler.css' %}"/>
@@ -69,7 +70,62 @@
                         <button>Üye OL</button>
                     {% endif %}
                 </div>
-            <hr>
+                <hr>
+                <div class="col-md-10 yorumlar">
+
+                    {% for yorum in yorumlar %}
+
+                        <div class="col-md-8 col-md-offset-2 yorum">
+                            <div class="yorum-yapan row">
+                                <h4 class="yorum-yapan-h"><a
+                                        href="{{ yorum.yorum_yapan_url }}">{{ yorum.yorum_yapan.username }}</a></h4>
+                                <small class="trh">
+                                    {{ yorum.yorum_tarihi|timesince }} önce yazdı.
+                                </small>
+
+                                {% if user.is_superuser %}
+
+                                        <form action="{% url 'show_product' slug=urun.urun_slug %}" method="POST"
+                                              accept-charset="utf-8" class="form" role="form"
+                                              enctype='multipart/form-data'>
+                                            {% csrf_token %}
+                                            <input type="hidden" name="todo" value="del">
+                                            <input type="hidden" name="id" value="{{ yorum.id }}">
+                                            <button type="submit" class="btn btn-danger col-md-2">Sil</button>
+
+                                        </form>
+                                        <a href="{{ req.get_path }}comment/{{ yorum.id }}" class="btn btn-warning col-md-2">Düzenle</a>
+
+                                {% endif %}
+                            </div>
+                            <div class="yorum-baslik">
+                                <h3 class="yorum-baslik-h">{{ yorum.yorum_baslik }} </h3>
+
+                            </div>
+
+
+                            <div class="yorum-icerik">
+                                <p class="yorum-icerik-p">{{ yorum.yorum_icerik }}</p>
+                            </div>
+
+                        </div>
+                        <hr>
+                    {% endfor %}
+
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="row col-md-6 col-md-offset-3">
+                        <form action="{% url 'show_product' slug=urun.urun_slug %}" method="POST" accept-charset="utf-8"
+                              class="form" role="form"
+                              enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <input type="hidden" name="todo" value="yorum">
+                            <div class="frm">{{ form.yorum_baslik_f|attr:"class:form-control input-sm"|attr:"placeholder:Başlık" }}</div>
+                            <div class="frm">{{ form.yorum_icerik_f|attr:"class:form-control input-sm"|attr:"style:height: 100px;resize:none;"|attr:"placeholder:İçerik" }}</div>
+                            <button type="submit" class="form-control btn btn-success">Yorum Yap</button>
+                        </form>
+                    </div>
+                {% endif %}
 
 
             </div>

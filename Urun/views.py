@@ -9,7 +9,9 @@ import os
 from base64 import b64encode
 from django.core.files import File
 from marketle import settings
-
+from Yorumlama.models import UrunYorumlama
+from Yorumlama.forms import UrunYorumlamaForms
+from django.forms import modelform_factory
 
 # Create your views here.
 
@@ -122,17 +124,70 @@ def urunSil(req, id):
 
     pass
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def urunGoster(req, slug):
-
     urun = Urun.objects.filter(urun_slug=slug)
-
     if urun.exists():
-        urun = urun.first()
-        context = {"urun":urun}
-        return render(req, "marketle/urun_sayfasi.html", context=context)
+        if req.method == "GET":
+            urun = urun.first()
+            urun_yorum_form = UrunYorumlamaForms()
+            yorumlar = UrunYorumlama.objects.filter(urun=urun).order_by("-yorum_tarihi")
+            context = {"urun":urun,
+                       "form": urun_yorum_form,
+                       "yorumlar": yorumlar}
+            return render(req, "marketle/urun_sayfasi.html", context=context)
+        else: # POST
+
+            if req.POST["todo"] == "yorum": # yorum
+                urun = urun.first()
+                urun_yorum_form = UrunYorumlamaForms(data=req.POST)
+                if urun_yorum_form.is_valid():
+                    yorum_baslik = urun_yorum_form.cleaned_data['yorum_baslik_f']
+                    yorum_icerik = urun_yorum_form.cleaned_data['yorum_icerik_f']
+                    UrunYorumlama(urun=urun, yorum_yapan=req.user,
+                                  yorum_baslik=yorum_baslik, yorum_icerik=yorum_icerik).save()
+                    return HttpResponseRedirect(reverse("show_product", kwargs={"slug":slug}))
+                pass
+            elif req.POST["todo"] == "del": #silme
+                if req.user.is_superuser:
+                    UrunYorumlama.objects.get(id=req.POST["id"]).delete()
+                    return HttpResponseRedirect(reverse("show_product", kwargs={"slug":slug}))
+                else:
+                    return HttpResponseRedirect(reverse("show_product", kwargs={"slug":slug}))
+
     else:
         return render(req, "404.html", context={}, status=404)
 
     pass
+
+
+@require_http_methods(["GET", "POST"])
+@login_required(login_url='/login/')
+def yorumDuzenle(req, slug, id):
+    yorum = UrunYorumlama.objects.filter(id=id)
+    if req.method == "GET":
+        if req.user.is_superuser:
+            yorum = yorum.first()
+            initial_data = {
+                "yorum_baslik_f" : yorum.yorum_baslik,
+                "yorum_icerik_f" : yorum.yorum_icerik
+            }
+            form = UrunYorumlamaForms(initial=initial_data)
+            context = {"form":form,
+                       "urun_slug":slug,
+                       "yorum_id":id}
+            return render(req, "marketle/yorum_duzenle.html", context=context)
+        else:
+            return HttpResponseRedirect(reverse("show_product", kwargs={"slug":slug}))
+    else: # POST
+        if req.user.is_superuser:
+            form = UrunYorumlamaForms(data=req.POST)
+            if form.is_valid():
+                yorum_baslik = form.cleaned_data["yorum_baslik_f"]
+                yorum_icerik = form.cleaned_data["yorum_icerik_f"]
+                yorum.update(yorum_baslik=yorum_baslik, yorum_icerik=yorum_icerik)
+            return HttpResponseRedirect(reverse("show_product", kwargs={"slug": slug}))
+        else:
+            return HttpResponseRedirect(reverse("show_product", kwargs={"slug": slug}))
+
 
