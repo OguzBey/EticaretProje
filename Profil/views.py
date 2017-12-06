@@ -1,8 +1,9 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from Uyelik.models import MyUser
-from .forms import UserEditForm, MyUserEditForm
+from .forms import UserEditForm, MyUserEditForm, HesapAyarlariForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from SaticiOylama.forms import SaticiOylamaForm
 from SaticiOylama.models import SaticiOylama
@@ -21,8 +22,6 @@ def kullanici_profili(req):
 def kullanici_profili_duzenle(req):
 
     user_edit_form = UserEditForm(instance=req.user)
-    # user_edit_formset = inlineformset_factory(User, MyUser,
-    #                                        fields=('adres','dogum_tarihi','profil_foto'))
     user_edit_form2 = MyUserEditForm(instance=req.user.myuser)
 
     myuser = MyUser.objects.get(user=req.user)
@@ -32,7 +31,12 @@ def kullanici_profili_duzenle(req):
         user_edit_form = UserEditForm(data=req.POST, instance=req.user)
         user_edit_form2 = MyUserEditForm(data=req.POST, files=req.FILES)
         if user_edit_form.is_valid() and user_edit_form2.is_valid():
-            user = user_edit_form.save()
+            username = req.user.username
+            email = req.user.email
+            user = user_edit_form.save(commit=False)
+            user.username = username
+            user.email = email
+            user.save()
             m = MyUser.objects.get(user=user)
             if user_edit_form2.cleaned_data['profil_fotosu'] is None:
                 pass
@@ -40,13 +44,12 @@ def kullanici_profili_duzenle(req):
                 m.profil_foto = user_edit_form2.cleaned_data['profil_fotosu']
             m.adres = user_edit_form2.cleaned_data['adres']
             m.dogum_tarihi = user_edit_form2.cleaned_data['dogum_tarihi']
-            # m.profil_foto = user_edit_form2.cleaned_data['profil_fotosu']
             m.save()
             return HttpResponseRedirect(reverse('profil'))
 
     context = {'form1': user_edit_form,
                'form2': user_edit_form2,
-               'myuser':myuser}
+               'myuser': myuser}
     return render(req, 'marketle/profil_duzenle.html', context=context)
 
 
@@ -58,6 +61,7 @@ def isVoted(satici_username, oyveren_username):
     else:
         return False # Oy vermemiş
 
+
 def basariHesapla(user):
 
     oy_sayisi = len(user.oylama.all())
@@ -68,8 +72,6 @@ def basariHesapla(user):
     for i in user.oylama.all():
         pay += i.oy_puani
     return "{:.2f}".format((pay/payda)*100)
-
-
 
 
 @require_http_methods(["GET", "POST"])
@@ -175,4 +177,31 @@ def kullanici_goruntule(req, username):
             else:
                 pass
             return HttpResponseRedirect(reverse('show_user', kwargs={'username':username}))
+
+
+@login_required(login_url='/login/')
+@require_http_methods(["GET", "POST"])
+def hesap_ayarlari_duzenle(req):
+    back_url = req.META.get('HTTP_REFERER')
+    if req.method == "GET":
+        form = HesapAyarlariForm(instance=req.user, request=req)
+        context = {"form": form ,
+                   "back_url": back_url}
+        return render(req, "marketle/hesap_ayarları.html", context=context)
+    else: # POST
+        form = HesapAyarlariForm(instance=req.user, data=req.POST, request=req)
+        context = {
+            "form" : form,
+            "back_url": back_url
+        }
+        if form.is_valid():
+            user = User.objects.filter(id=req.user.id).first()
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
+            user.username = username
+            user.email = email
+            user.save()
+            return HttpResponseRedirect(reverse('profil'))
+        return render(req, "marketle/hesap_ayarları.html", context=context)
+
 

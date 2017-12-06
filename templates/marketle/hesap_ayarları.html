@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block bodyy %}
+    <div class="container">
+        <div class="row">
+            <h3 class="col-sm-offset-3 col-sm-6">Hesap Ayarları</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-2">
+
+            </div>
+            <div class="col-sm-6">
+                <form action="{% url 'edit_account' %}" method="POST" accept-charset="utf-8" class="form" role="form"
+                      enctype='multipart/form-data'>
+                    {% csrf_token %}
+
+
+                    {{ form.username|attr:"class:form-control input-lg"|attr:"placeholder:Kullanıcı Adı"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir kullanıcı adı giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
+
+                    {{ form.email|attr:"class:form-control input-lg"|attr:"placeholder:Email"|attr:"oninvalid:this.setCustomValidity('Lütfen geçerli bir email adresi giriniz')"|attr:"oninput:this.setCustomValidity('')" }}
+                    {{ form.password|attr:"class:form-control input-lg"|attr:"placeholder:Password" }}
+
+
+                    <span class="help-block">
+                    {% if form.errors %}
+
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+
+                </span>
+
+                    <div class="row">
+                        <div class="col-xs-6 col-md-6">
+                            <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">Kaydet
+                            </button>
+                        </div>
+                        <div class="col-xs-6 col-md-6">
+                            <a class="btn btn-lg btn-danger btn-block" href="{{ back_url }}">
+                                İptal
+                            </a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

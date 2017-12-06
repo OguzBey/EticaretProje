@@ -19,7 +19,7 @@ from django.contrib import admin
 from Anasayfa.views import *
 from django.contrib.auth import views as auth_views
 from Uyelik.views import uyelik_formu
-from Profil.views import kullanici_profili, kullanici_profili_duzenle, kullanici_goruntule
+from Profil.views import *
 from django.conf.urls.static import static
 from Urun.views import *
 from django.shortcuts import render_to_response
@@ -31,14 +31,17 @@ urlpatterns = [
     url(r'login/$', auth_views.login, {'template_name': 'marketle/girisyap.html'}, name="login",
         ),
     url(r'^register/$', uyelik_formu, name="register"),
-    url(r'^profil/$', kullanici_profili, name='profil'),
-    url(r'^profil/edit$', kullanici_profili_duzenle, name='edit_profil'),
-    url(r'^user/(?P<username>@\w+)$', kullanici_goruntule, name='show_user'),
-    url(r'^product/add/$', urunEkle, name='add_product'),
-    url(r'^product/edit/(?P<id>\d+)$', urunDuzenle , name='edit_product'),
-    url(r'^product/delete/(?P<id>\d+)$', urunSil, name='delete_product'),
-    url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/$', urunGoster, name='show_product'),
+    url(r'^profil/$', kullanici_profili, name="profil"),
+    url(r'^profil/edit$', kullanici_profili_duzenle, name="edit_profil"),
+    url(r'^user/(?P<username>@\w+)$', kullanici_goruntule, name="show_user"),
+    url(r'^account/edit$', hesap_ayarlari_duzenle, name="edit_account"),
+    #product
+    url(r'^product/add/$', urunEkle, name="add_product"),
+    url(r'^product/edit/(?P<id>\d+)$', urunDuzenle , name="edit_product"),
+    url(r'^product/delete/(?P<id>\d+)$', urunSil, name="delete_product"),
+    url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/$', urunGoster, name="show_product"),
     url(r'^product/(?P<slug>[a-z0-9]+(\-[a-z0-9]+)*)/comment/(?P<id>\d+)$', yorumDuzenle, name="edit_comment")
+
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
